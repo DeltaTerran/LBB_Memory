@@ -1,0 +1,2 @@
+C:\Users\Achem\Documents\GitHub\LBB_Memory\LBB_Memory\obj\Debug\Assembly-CSharp.csproj.AssemblyReference.cache
+C:\Users\Achem\Documents\GitHub\LBB_Memory\LBB_Memory\obj\Debug\Assembly-CSharp.csproj.CoreCompileInputs.cache
