@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class SceneController : MonoBehaviour {
 	//Значения, указывающие количество ячеек сетки и их расстояние друг от друга.
@@ -126,7 +127,13 @@ public class SceneController : MonoBehaviour {
         _firstRevealed = null;
         _secondRevealed = null;
     }
-
+    /// <summary>
+    /// Эта команда загружает ресурс scene.
+    /// </summary>
+    public void Restart()
+    {
+        SceneManager.LoadScene("main");
+    }
     // Update is called once per frame
     void Update () {
 		
