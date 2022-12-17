@@ -13,10 +13,16 @@ public class SceneController : MonoBehaviour {
 	///  Ссылка для карты в сцене
 	/// </summary>
 	[SerializeField] private MemoryCard originalCard;
-	/// <summary>
-	/// Массив для ссылок на ресурсы-спрайты
-	/// </summary>
-	[SerializeField] private Sprite[] images;
+    [SerializeField] private TextMesh scoreLabel;
+    private MemoryCard _firstRevealed;
+    private MemoryCard _secondRevealed;
+
+
+    private int _score = 0;
+    /// <summary>
+    /// Массив для ссылок на ресурсы-спрайты
+    /// </summary>
+    [SerializeField] private Sprite[] images;
     // Use this for initialization
     void Start()
     {
@@ -41,7 +47,7 @@ public class SceneController : MonoBehaviour {
                 //Идентификаторы получаем из перемешанного списка, а не из случайных чисел.
                 int index = j * gridCols + i;
                 int id = numbers[index];
-                originalCard.SetCard(id, images[id]);
+                card.SetCard(id, images[id]);
 
                 float posX = (offsetX * i) + startPos.x;
                 float posY = -(offsetY * j) + startPos.y;
@@ -55,8 +61,21 @@ public class SceneController : MonoBehaviour {
     /// </summary>
     /// <param name="numbers"></param>
     /// <returns></returns>
+    //private int[] ShuffleArray(int[] numbers)
+    //{
+    //    int[] newArray = numbers.Clone() as int[];
+    //    for (int i = 0; i < newArray.Length; i++)
+    //    {
+    //        int tmp = newArray[i];
+    //        int r = UnityEngine.Random.Range(i, newArray.Length);
+    //        newArray[i] = newArray[r];
+    //        newArray[r] = tmp;
+    //    }
+    //    return newArray;
+    //}
     private int[] ShuffleArray(int[] numbers)
     {
+        //Реализация алгоритма тасования Кнута. 
         int[] newArray = numbers.Clone() as int[];
         for (int i = 0; i < newArray.Length; i++)
         {
@@ -66,6 +85,46 @@ public class SceneController : MonoBehaviour {
             newArray[r] = tmp;
         }
         return newArray;
+    }
+
+    public bool canReveal
+    {
+        get
+        {
+            return _secondRevealed == null;
+        }
+    }
+    public void CardRevealed (MemoryCard card)
+    {
+        //Сохраняем карты в одну из двух переменных, в зависимости от того, какая из них свободна.
+        if (_firstRevealed == null)
+        {
+            _firstRevealed = card;
+        }
+        else
+        {
+            _secondRevealed = card;
+            StartCoroutine(CheckMatch());
+            
+        }
+    }
+
+    private IEnumerator CheckMatch()
+    {
+        if (_firstRevealed.id == _secondRevealed.id)
+        {
+            _score++;
+            scoreLabel.text = "Score: " + _score;
+        }
+        else
+        {
+            yield return new WaitForSeconds(.5f);
+            _firstRevealed.Unreveal();
+            _secondRevealed.Unreveal();
+        }
+        //Очищаем переменные вне зависимости от того, было ли совпадение.
+        _firstRevealed = null;
+        _secondRevealed = null;
     }
 
     // Update is called once per frame

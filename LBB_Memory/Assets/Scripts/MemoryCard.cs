@@ -28,12 +28,20 @@ public class MemoryCard : MonoBehaviour {
 	public void OnMouseDown()
     {
 		//Kод деактивации запускается только в случае, когда объект активен / видим.
-		if (cardBack.activeSelf)
+		//Проверка свойства контроллера canReveal, гарантирующая, что одновременно можно открыть всего две карты.
+		if (cardBack.activeSelf && controller.canReveal)
         {
 			cardBack.SetActive(false);
+			controller.CardRevealed(this);
         }
     }
-
+	/// <summary>
+	/// Открытый метод, позволяющий компоненту SceneController снова скрыть карту (вернув на место спрайт card_back).
+	/// </summary>
+	public void Unreveal()
+    {
+		cardBack.SetActive(true);
+    }
 	// Use this for initialization
 	void Start () {
 	}
